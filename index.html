@@ -59,7 +59,8 @@
   .hero .eyebrow{color:#8FA6B4}
   .hero h1{max-width:16ch}
   .hero h1 em{font-style:normal;color:var(--ouro-claro);font-weight:700}
-  .hero-lead{max-width:52ch;color:#C9D5DC;font-size:19px;margin-top:24px}
+  .hero-lead{max-width:52ch;color:#C9D5DC;font-size:19px;margin-top:22px}
+  .hero-lead b{color:#fff;font-weight:700}
   .hero-grid{display:grid;grid-template-columns:1.15fr .85fr;gap:48px;align-items:end}
   .selo{border:2px solid rgba(230,190,130,.55);border-radius:2px;padding:20px 22px;
     box-shadow:inset 0 0 0 4px rgba(18,34,46,1),inset 0 0 0 5px rgba(230,190,130,.28);
@@ -133,7 +134,7 @@
 
   .veredito{background:var(--tinta);color:var(--papel);padding:34px 30px;border-radius:3px 3px 0 0;
     display:grid;grid-template-columns:1fr auto;gap:28px;align-items:center}
-  .veredito .frase{font-family:var(--display);font-size:clamp(22px,2.7vw,31px);line-height:1.2;max-width:22ch;margin:0}
+  .veredito .frase{font-family:var(--display);font-size:clamp(21px,2.5vw,29px);line-height:1.22;max-width:28ch;margin:0}
   .veredito .frase b{color:var(--ouro-claro)}
   .carimbo{border:2px solid var(--excesso);color:#fff;background:rgba(168,30,39,.22);
     padding:14px 22px;text-align:center;border-radius:2px}
@@ -151,11 +152,12 @@
   .canhoto.devido .v{color:var(--devido)}
 
   .totais{border:1px solid var(--linha);border-top:0;background:var(--papel-2);padding:26px;
-    display:grid;grid-template-columns:repeat(3,1fr);gap:24px}
+    display:grid;grid-template-columns:repeat(auto-fit,minmax(215px,1fr));gap:24px}
   .total .t{font-family:var(--mono);font-size:11px;letter-spacing:.13em;text-transform:uppercase;color:var(--tinta-2)}
   .total .v{font-family:var(--mono);font-size:25px;font-weight:600;margin-top:7px}
   .total .d{font-size:13px;color:var(--tinta-2);margin-top:5px;line-height:1.45}
   .total.destaque .v{color:var(--excesso)}
+  .total.futuro .v{color:var(--devido)}
 
   .grafico{border:1px solid var(--linha);border-top:0;background:var(--branco);padding:26px}
   .grafico h3{font-size:17px;font-family:var(--corpo);font-weight:700;margin-bottom:4px}
@@ -256,19 +258,26 @@
   <div class="wrap">
     <div class="hero-grid">
       <div>
-        <p class="eyebrow">Reajuste de plano de saúde · Lei 9.656/98</p>
-        <h1>Sua mensalidade subiu mais do que a ANS <em>autoriza</em>?</h1>
+        <h1>Seu plano tem só a sua família — e sobe demais <em>todo ano</em>?</h1>
         <p class="hero-lead">
           Todo ano a ANS publica um teto de reajuste para planos individuais e familiares.
-          Muita gente paga bem acima dele há anos sem perceber — porque cada aumento incide
-          sobre o anterior, e o excesso vira bola de neve.
+          Em 2026 esse teto é de <b>5,11%</b>.
         </p>
         <p class="hero-lead">
-          Pegue o primeiro e o último boleto do contrato. Com esses dois valores a gente já
-          consegue dizer se há indício de abusividade.
+          O que quase ninguém sabe é que o plano empresarial aberto pelo CNPJ de um MEI ou de uma
+          microempresa, tendo apenas familiares como beneficiários, vem sendo tratado pelos
+          tribunais como plano familiar disfarçado — e, nessas decisões, o reajuste é limitado ao
+          mesmo teto da ANS.
+        </p>
+        <p class="hero-lead">
+          É a diferença entre absorver aumentos de 15%, 20%, 30% ao ano e discutir a aplicação de
+          um índice como o de 5,11%.
+        </p>
+        <p class="hero-lead" style="color:var(--ouro-claro);font-weight:600">
+          Vamos calcular se você está pagando mais do que deveria?
         </p>
         <div class="acoes">
-          <a class="btn" href="#calculadora">Fazer a avaliação preliminar</a>
+          <a class="btn" href="#calculadora">Calcular meu plano agora</a>
         </div>
       </div>
       <dl class="selo">
@@ -441,7 +450,22 @@
     </div>
 
     <details open>
-      <summary>Meu plano é coletivo. O teto da ANS vale para mim?</summary>
+      <summary>Meu plano é empresarial, pelo CNPJ da minha empresa, mas só tem a minha família. Vale o teto?</summary>
+      <div class="r">
+        <p>Esse é o caso mais comum de todos. Um contrato assim é empresarial no papel, mas familiar na
+        substância: não há empresa negociando em nome de um grupo grande, com poder de barganha real —
+        há uma família recebendo o reajuste que a operadora decidir, sem o teto que protegeria o mesmo
+        grupo se o contrato fosse individual.</p>
+        <p>Diante disso, os tribunais têm reconhecido a natureza familiar do contrato e limitado o
+        reajuste ao índice da ANS, ou exigido que a operadora apresente a memória de cálculo da
+        sinistralidade que justificaria o aumento — o que ela raramente faz. Não é automático: depende
+        do contrato, do número de vidas e do histórico. A calculadora mostra o tamanho da diferença;
+        o enquadramento é jurídico.</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>E o coletivo por adesão, contratado por sindicato ou associação?</summary>
       <div class="r">
         <p>Formalmente, não: a ANS não fixa teto para contratos coletivos, cujo reajuste é negociado
         entre a operadora e a pessoa jurídica contratante. Só que muitos contratos “coletivos por
@@ -594,7 +618,7 @@ document.getElementById("listaIndices").innerHTML = Object.keys(ANS).sort().reve
 const TEXTO_TIPO = {
   ind:"O teto anual da ANS vale diretamente para contratos individuais e familiares. A comparação é direta.",
   ade:"A ANS não fixa teto para coletivos por adesão. Aqui o índice entra como <b>parâmetro de comparação</b> — é o ponto de partida da discussão sobre falso coletivo.",
-  emp:"Em contratos empresariais o reajuste é negociado com a empresa contratante. Para grupos pequenos, o índice da ANS costuma servir de <b>referência de razoabilidade</b>."
+  emp:"Se o contrato foi aberto pelo CNPJ de um MEI ou microempresa e só tem familiares como beneficiários, é justamente o caso em que os tribunais têm aplicado o teto da ANS. A comparação abaixo mostra o tamanho da diferença."
 };
 function trocarDicaTipo(){
   const v = document.querySelector("input[name=tipo]:checked").value;
@@ -668,7 +692,7 @@ function calcular(){
   return {
     tipo, V, A, n, g, gAns, meses, anos, semFator,
     recup:r2(recup), presc:r2(presc), total:r2(recup+presc),
-    P:r2(P), Ph:r2(Ph), dif:r2(P-Ph),
+    P:r2(P), Ph:r2(Ph), dif:r2(P-Ph), ano12:r2((P-Ph)*12),
     excesso:(P/Ph-1)*100,
     inicio:`${MESES[mI-1]} de ${aI}`
   };
@@ -700,11 +724,11 @@ function grafico(m){
 
 function render(res){
   const el = document.getElementById("resultado");
-  const forte = res.excesso >= 10;
+  const forte = res.excesso >= 5;
   const corte = res.meses.length-36;
 
   const frase = forte
-    ? `Sua mensalidade está <b>${brl.format(res.dif)}</b> por mês acima do que seria se cada aniversário tivesse seguido o teto da ANS.`
+    ? `Pelo que você me passou, há indícios de que esteja pagando <b>${brl.format(res.dif)}</b> a mais por mês do que se o reajuste tivesse seguido o teto da ANS.`
     : `A evolução do seu plano ficou perto do teto da ANS. A diferença estimada é de <b>${brl.format(res.dif)}</b> por mês.`;
 
   const linhasAnos = res.anos.map((a,k)=>`
@@ -726,6 +750,7 @@ Mensalidade hoje: ${brl.format(res.A)}
 Pelo teto da ANS seria: ${brl.format(res.Ph)}
 Diferença por mês: ${brl.format(res.dif)} (${dec.format(res.excesso)}% acima)
 Estimativa dos últimos 36 meses: ${brl.format(res.recup)}
+Economia nos próximos 12 meses: ${brl.format(res.ano12)}
 
 Gostaria de conversar sobre o meu caso.`);
 
@@ -766,6 +791,11 @@ Gostaria de conversar sobre o meu caso.`);
         <div class="t">Diferença mensal atual</div>
         <div class="v">${brl.format(res.dif)}</div>
         <div class="d">O que a diferença de hoje representa por mês, e continua a representar enquanto o contrato seguir nessa base.</div>
+      </div>
+      <div class="total futuro">
+        <div class="t">Próximos 12 meses</div>
+        <div class="v">${brl.format(res.ano12)}</div>
+        <div class="d">Considerando a diferença apurada, é o que você deixaria de pagar em um ano se a mensalidade passasse a seguir o teto da ANS.</div>
       </div>
     </div>
 
