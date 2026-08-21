@@ -89,6 +89,7 @@
 
   .campos{display:grid;grid-template-columns:repeat(12,1fr);gap:20px}
   .campo{display:flex;flex-direction:column;gap:7px}
+  .campo[hidden]{display:none}
   .c-6{grid-column:span 6}.c-4{grid-column:span 4}.c-12{grid-column:span 12}
   label{font-size:13.5px;font-weight:600}
   .dica{font-size:12.5px;color:var(--tinta-2);font-weight:400;line-height:1.45}
@@ -185,6 +186,9 @@
   table.mem .ans{color:var(--devido)}
   .nota-mem{font-size:12.5px;color:var(--tinta-2);margin:16px 0 0;line-height:1.5}
 
+  .nota-perfil{border:1px solid var(--linha);border-top:0;background:#FAF6EC;padding:20px 26px;
+    font-size:14.5px;line-height:1.55;color:#4A4230}
+  .nota-perfil b{color:var(--tinta)}
   .cta-res{border:1px solid var(--linha);border-top:0;border-radius:0 0 3px 3px;background:var(--tinta);
     color:var(--papel);padding:28px 26px;display:flex;justify-content:space-between;gap:24px;
     align-items:center;flex-wrap:wrap}
@@ -258,26 +262,27 @@
   <div class="wrap">
     <div class="hero-grid">
       <div>
-        <h1>Seu plano tem só a sua família — e sobe demais <em>todo ano</em>?</h1>
+        <h1>Seu plano está no CNPJ, mas atende <em>só a sua família</em>?</h1>
         <p class="hero-lead">
-          Todo ano a ANS publica um teto de reajuste para planos individuais e familiares.
-          Em 2026 esse teto é de <b>5,11%</b>.
+          Todo ano, a ANS define o limite de reajuste dos planos individuais e familiares.
+          Em 2026, esse índice é de <b>5,11%</b>. Já os planos empresariais seguem regras
+          diferentes — e podem receber reajustes bem superiores.
         </p>
         <p class="hero-lead">
-          O que quase ninguém sabe é que o plano empresarial aberto pelo CNPJ de um MEI ou de uma
-          microempresa, tendo apenas familiares como beneficiários, vem sendo tratado pelos
-          tribunais como plano familiar disfarçado — e, nessas decisões, o reajuste é limitado ao
-          mesmo teto da ANS.
+          Mas existe uma situação que merece atenção: <b>quando o plano está vinculado a um CNPJ,
+          mas, na prática, atende apenas o titular e sua família.</b>
         </p>
         <p class="hero-lead">
-          É a diferença entre absorver aumentos de 15%, 20%, 30% ao ano e discutir a aplicação de
-          um índice como o de 5,11%.
+          Em alguns casos, os tribunais têm reconhecido que contratos com essas características
+          podem ser analisados como planos familiares, inclusive para discutir os reajustes
+          aplicados. Por isso, aumentos sucessivos de 15%, 20% ou 30% merecem uma análise mais
+          cuidadosa do contrato e do histórico de mensalidades.
         </p>
         <p class="hero-lead" style="color:var(--ouro-claro);font-weight:600">
-          Vamos calcular se você está pagando mais do que deveria?
+          Veja como os reajustes do seu plano se comparam aos índices de referência da ANS.
         </p>
         <div class="acoes">
-          <a class="btn" href="#calculadora">Calcular meu plano agora</a>
+          <a class="btn" href="#calculadora">ANALISAR MEUS REAJUSTES</a>
         </div>
       </div>
       <dl class="selo">
@@ -290,7 +295,7 @@
       </dl>
     </div>
     <div class="rodape-hero">
-      <span><b>Cinco campos.</b> Menos de um minuto.</span>
+      <span><b>Rápido.</b> Menos de um minuto.</span>
       <span><b>Sem cadastro.</b> O cálculo roda no seu aparelho.</span>
       <span><b>Índices oficiais</b> da ANS e do TJSP.</span>
     </div>
@@ -301,16 +306,16 @@
   <div class="wrap">
     <div class="sec-tit">
       <p class="eyebrow">Avaliação preliminar</p>
-      <h2>Só o que está no seu boleto</h2>
+      <h2>Vamos começar pelo histórico da sua mensalidade</h2>
       <p>
-        A conta compara a evolução real da sua mensalidade com a evolução que ela teria tido
-        se cada aniversário do contrato tivesse respeitado o teto anual da ANS.
+        Com algumas informações do seu plano, vamos comparar a evolução da sua mensalidade com os
+        índices anuais definidos pela ANS para planos individuais e familiares.
       </p>
     </div>
 
     <div class="painel">
       <div class="painel-cab">
-        <strong>Comparar com o teto da ANS</strong>
+        <strong>Dados para a simulação</strong>
         <span>Índices atualizados até <span class="num" data-mes-atual></span></span>
       </div>
 
@@ -326,16 +331,29 @@
             <p class="dica" id="dica-tipo"></p>
           </fieldset>
 
+          <div class="campo c-6 so-emp" hidden>
+            <label for="benefic">Quem são os beneficiários deste plano?</label>
+            <select id="benefic">
+              <option value="">Selecione</option>
+              <option value="so-eu">Apenas eu</option>
+              <option value="familia">Eu e familiares</option>
+              <option value="misto">Familiares e funcionários</option>
+            </select>
+          </div>
+
+          <div class="campo c-6 so-emp" hidden>
+            <label for="vidas">Quantas pessoas estão atualmente no plano?</label>
+            <input type="text" id="vidas" inputmode="numeric" placeholder="3" autocomplete="off">
+          </div>
+
           <div class="campo c-6">
             <label for="mesIni">Mês de início do plano</label>
             <select id="mesIni"></select>
-            <span class="dica">É o mês em que o reajuste anual cai todo ano.</span>
           </div>
 
           <div class="campo c-6">
             <label for="anoIni">Ano de início do plano</label>
             <select id="anoIni"></select>
-            <span class="dica">A série de tetos da ANS começa em 2000. Planos firmados até 1998 e não adaptados à Lei 9.656/98 seguem regra própria — fale com a gente.</span>
           </div>
 
           <div class="campo c-6">
@@ -352,7 +370,7 @@
         </div>
 
         <div class="acoes">
-          <button class="btn" id="btnCalc">Ver o resultado</button>
+          <button class="btn" id="btnCalc">SIMULAR MEUS REAJUSTES</button>
           <button class="btn btn-2" id="btnLimpar">Limpar</button>
         </div>
         <div class="erro" id="erro"></div>
@@ -616,13 +634,16 @@ document.getElementById("listaIndices").innerHTML = Object.keys(ANS).sort().reve
   .map(a=>`<li>${a}/${+a+1} — ${dec.format(ANS[a])}%</li>`).join("");
 
 const TEXTO_TIPO = {
-  ind:"O teto anual da ANS vale diretamente para contratos individuais e familiares. A comparação é direta.",
+  ind:"",
   ade:"A ANS não fixa teto para coletivos por adesão. Aqui o índice entra como <b>parâmetro de comparação</b> — é o ponto de partida da discussão sobre falso coletivo.",
-  emp:"Se o contrato foi aberto pelo CNPJ de um MEI ou microempresa e só tem familiares como beneficiários, é justamente o caso em que os tribunais têm aplicado o teto da ANS. A comparação abaixo mostra o tamanho da diferença."
+  emp:"Planos coletivos empresariais seguem regras de reajuste diferentes. Esta simulação usa os índices dos planos individuais e familiares apenas como referência comparativa."
 };
 function trocarDicaTipo(){
   const v = document.querySelector("input[name=tipo]:checked").value;
-  document.getElementById("dica-tipo").innerHTML = TEXTO_TIPO[v];
+  const d = document.getElementById("dica-tipo");
+  d.innerHTML = TEXTO_TIPO[v];
+  d.style.display = TEXTO_TIPO[v] ? "" : "none";
+  document.querySelectorAll(".so-emp").forEach(e=>{ e.hidden = (v!=="emp"); });
 }
 document.querySelectorAll("input[name=tipo]").forEach(r=>r.addEventListener("change",trocarDicaTipo));
 trocarDicaTipo();
@@ -646,7 +667,11 @@ function calcular(){
   const V   = num(document.getElementById("valorIni").value);
   const A   = num(document.getElementById("valorAtual").value);
   const tipo= document.querySelector("input[name=tipo]:checked").value;
+  const benefic = document.getElementById("benefic").value;
+  const vidas   = parseInt(document.getElementById("vidas").value.replace(/\D/g,""),10);
 
+  if(tipo==="emp" && !benefic) return {erro:"Conte quem são os beneficiários do plano."};
+  if(tipo==="emp" && (isNaN(vidas)||vidas<1)) return {erro:"Informe quantas pessoas estão hoje no plano."};
   if(isNaN(V) || V<=0) return {erro:"Informe a mensalidade total do início do contrato."};
   if(isNaN(A) || A<=0) return {erro:"Informe a mensalidade total que você paga hoje."};
 
@@ -690,7 +715,7 @@ function calcular(){
 
   const gAns = Math.pow(prodAns,1/n)-1;
   return {
-    tipo, V, A, n, g, gAns, meses, anos, semFator,
+    tipo, benefic, vidas, V, A, n, g, gAns, meses, anos, semFator,
     recup:r2(recup), presc:r2(presc), total:r2(recup+presc),
     P:r2(P), Ph:r2(Ph), dif:r2(P-Ph), ano12:r2((P-Ph)*12),
     excesso:(P/Ph-1)*100,
@@ -722,8 +747,12 @@ function grafico(m){
   </svg>`;
 }
 
+const ROTULO_TIPO = {ind:"Individual ou familiar", ade:"Coletivo por adesão", emp:"Coletivo empresarial"};
+const ROTULO_BENEF = {"so-eu":"Apenas o titular", familia:"Titular e familiares", misto:"Familiares e funcionários"};
+
 function render(res){
   const el = document.getElementById("resultado");
+  const perfilFamiliar = res.tipo==="emp" && (res.benefic==="so-eu" || res.benefic==="familia");
   const forte = res.excesso >= 5;
   const corte = res.meses.length-36;
 
@@ -744,6 +773,7 @@ function render(res){
   const msg = encodeURIComponent(
 `Olá! Fiz a avaliação preliminar no site.
 
+Tipo de plano: ${ROTULO_TIPO[res.tipo]}${res.benefic?" · "+ROTULO_BENEF[res.benefic]:""}${res.vidas?" · "+res.vidas+" pessoa(s)":""}
 Início do plano: ${res.inicio}
 Mensalidade inicial: ${brl.format(res.V)}
 Mensalidade hoje: ${brl.format(res.A)}
@@ -825,6 +855,14 @@ Gostaria de conversar sobre o meu caso.`);
         </p>
       </div>
     </details>
+
+    ${perfilFamiliar?`<div class="nota-perfil">
+      <b>Atenção ao perfil deste contrato.</b> Você indicou um plano vinculado a CNPJ que, na
+      prática, atende ${res.benefic==="so-eu"?"apenas o titular":"o titular e seus familiares"}${res.vidas?`, com ${res.vidas} ${res.vidas>1?"pessoas":"pessoa"} no contrato`:""}.
+      É justamente a situação em que os tribunais têm analisado se o contrato deve ser tratado como
+      plano familiar, inclusive quanto aos reajustes. Isso depende da análise do contrato e do
+      histórico — não é automático.
+    </div>`:""}
 
     <div class="cta-res">
       <p><strong>Quer saber se isso vira processo?</strong>
