@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Seu plano subiu acima do teto da ANS? — Marchetti &amp; Miranda Advogados Associados</title>
+<title>Seu plano está no CNPJ, mas atende só a sua família? — Marchetti &amp; Miranda Advogados Associados</title>
 <meta name="description" content="Compare a evolução da sua mensalidade com o teto anual de reajuste da ANS. Avaliação preliminar gratuita, feita no seu navegador, sem cadastro.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -135,7 +135,10 @@
 
   .veredito{background:var(--tinta);color:var(--papel);padding:34px 30px;border-radius:3px 3px 0 0;
     display:grid;grid-template-columns:1fr auto;gap:28px;align-items:center}
-  .veredito .frase{font-family:var(--display);font-weight:600;font-size:clamp(24px,3vw,35px);line-height:1.18;max-width:26ch;margin:0}
+  .veredito .eyebrow{color:#8FA6B4;margin-bottom:14px}
+  .veredito .titulo-res{font-family:var(--display);font-weight:600;font-size:clamp(27px,3.4vw,40px);line-height:1.08;margin:0 0 14px}
+  .veredito .texto-res{color:#C9D5DC;font-size:15.5px;line-height:1.6;max-width:60ch;margin:0 0 20px}
+  .veredito .frase{font-family:var(--display);font-weight:600;font-size:clamp(22px,2.6vw,31px);line-height:1.2;max-width:30ch;margin:0;padding-top:18px;border-top:1px solid rgba(255,255,255,.16)}
   .veredito .frase b{color:var(--ouro-claro)}
   .carimbo{border:2px solid var(--excesso);color:#fff;background:rgba(168,30,39,.22);
     padding:14px 22px;text-align:center;border-radius:2px}
@@ -326,20 +329,20 @@
             <div class="radios">
               <label><input type="radio" name="tipo" value="ind" checked> Individual ou familiar</label>
               <label><input type="radio" name="tipo" value="ade"> Coletivo por adesão</label>
-              <label><input type="radio" name="tipo" value="emp"> Coletivo empresarial</label>
+              <label><input type="radio" name="tipo" value="emp"> Empresarial CNPJ (MEI ou micro empresa)</label>
             </div>
             <p class="dica" id="dica-tipo"></p>
           </fieldset>
 
-          <div class="campo c-6 so-emp" hidden>
-            <label for="benefic">Quem são os beneficiários deste plano?</label>
-            <select id="benefic">
-              <option value="">Selecione</option>
-              <option value="so-eu">Apenas eu</option>
-              <option value="familia">Eu e familiares</option>
-              <option value="misto">Familiares e funcionários</option>
-            </select>
-          </div>
+          <fieldset class="campo c-12 so-emp" hidden>
+            <legend>Quem são os beneficiários?</legend>
+            <div class="radios">
+              <label><input type="radio" name="benefic" value="so-eu"> Apenas eu</label>
+              <label><input type="radio" name="benefic" value="familia"> Eu e familiares</label>
+              <label><input type="radio" name="benefic" value="misto"> Familiares e funcionários</label>
+              <label><input type="radio" name="benefic" value="func"> Funcionários</label>
+            </div>
+          </fieldset>
 
           <div class="campo c-6 so-emp" hidden>
             <label for="vidas">Quantas pessoas estão atualmente no plano?</label>
@@ -644,6 +647,10 @@ function trocarDicaTipo(){
   d.innerHTML = TEXTO_TIPO[v];
   d.style.display = TEXTO_TIPO[v] ? "" : "none";
   document.querySelectorAll(".so-emp").forEach(e=>{ e.hidden = (v!=="emp"); });
+  if(v!=="emp"){
+    document.querySelectorAll("input[name=benefic]").forEach(r=>r.checked=false);
+    document.getElementById("vidas").value="";
+  }
 }
 document.querySelectorAll("input[name=tipo]").forEach(r=>r.addEventListener("change",trocarDicaTipo));
 trocarDicaTipo();
@@ -667,7 +674,8 @@ function calcular(){
   const V   = num(document.getElementById("valorIni").value);
   const A   = num(document.getElementById("valorAtual").value);
   const tipo= document.querySelector("input[name=tipo]:checked").value;
-  const benefic = document.getElementById("benefic").value;
+  const marcado = document.querySelector("input[name=benefic]:checked");
+  const benefic = marcado ? marcado.value : "";
   const vidas   = parseInt(document.getElementById("vidas").value.replace(/\D/g,""),10);
 
   if(tipo==="emp" && !benefic) return {erro:"Conte quem são os beneficiários do plano."};
@@ -737,7 +745,7 @@ function grafico(m){
   const lh = m.map((d,k)=>pt(k,d.Ph)).join(" ");
   const area = "M "+lp.split(" ").join(" L ")+" L "+m.map((d,k)=>pt(m.length-1-k, m[m.length-1-k].Ph)).join(" L ")+" Z";
   const ticks = m.map((d,k)=>({d,k})).filter(o=>o.d.aniv);
-  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Evolução da mensalidade cobrada comparada ao teto da ANS">
+  return `<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="Evolução da mensalidade informada comparada à simulação com os índices da ANS">
     <path d="${area}" fill="var(--excesso)" opacity=".12"></path>
     ${ticks.map(o=>`<line x1="${x(o.k).toFixed(1)}" y1="${mt}" x2="${x(o.k).toFixed(1)}" y2="${H-mb}" stroke="var(--linha)" stroke-dasharray="2 4"></line><text x="${x(o.k).toFixed(1)}" y="${H-8}" text-anchor="middle" font-family="IBM Plex Mono" font-size="11" fill="#445B6B">${rotulo(o.d.i)}</text>`).join("")}
     <polyline class="linha-anim" points="${lh}" fill="none" stroke="var(--devido)" stroke-width="2.5" stroke-linejoin="round"></polyline>
@@ -747,8 +755,9 @@ function grafico(m){
   </svg>`;
 }
 
-const ROTULO_TIPO = {ind:"Individual ou familiar", ade:"Coletivo por adesão", emp:"Coletivo empresarial"};
-const ROTULO_BENEF = {"so-eu":"Apenas o titular", familia:"Titular e familiares", misto:"Familiares e funcionários"};
+const ROTULO_TIPO = {ind:"Individual ou familiar", ade:"Coletivo por adesão", emp:"Empresarial CNPJ (MEI ou micro empresa)"};
+const ROTULO_BENEF = {"so-eu":"Apenas o titular", familia:"Titular e familiares",
+                      misto:"Familiares e funcionários", func:"Apenas funcionários"};
 
 function render(res){
   const el = document.getElementById("resultado");
@@ -777,7 +786,7 @@ Tipo de plano: ${ROTULO_TIPO[res.tipo]}${res.benefic?" · "+ROTULO_BENEF[res.ben
 Início do plano: ${res.inicio}
 Mensalidade inicial: ${brl.format(res.V)}
 Mensalidade hoje: ${brl.format(res.A)}
-Pelo teto da ANS seria: ${brl.format(res.Ph)}
+Mensalidade na simulação: ${brl.format(res.Ph)}
 Diferença por mês: ${brl.format(res.dif)} (${dec.format(res.excesso)}% acima)
 Estimativa dos últimos 36 meses: ${brl.format(res.recup)}
 Economia nos próximos 12 meses: ${brl.format(res.ano12)}
@@ -786,7 +795,14 @@ Gostaria de conversar sobre o meu caso.`);
 
   el.innerHTML = `
     <div class="veredito">
-      <p class="frase">${frase}</p>
+      <div>
+        <p class="eyebrow">Resultado da sua avaliação preliminar</p>
+        <h3 class="titulo-res">O que os seus números mostram</h3>
+        <p class="texto-res">Com base nas informações que você forneceu, comparamos a evolução da
+        sua mensalidade com uma simulação que utiliza, nos mesmos períodos, os índices anuais
+        definidos pela ANS para planos individuais e familiares.</p>
+        <p class="frase">${frase}</p>
+      </div>
       <div class="carimbo ${forte?"":"ok"}">
         <div class="p">${dec.format(res.excesso)}%</div>
         <div class="l">acima do teto ANS</div>
@@ -795,14 +811,14 @@ Gostaria de conversar sobre o meu caso.`);
 
     <div class="canhotos">
       <div class="canhoto pago">
-        <div class="t">Você paga hoje</div>
+        <div class="t">Sua mensalidade hoje</div>
         <div class="v">${brl.format(res.A)}</div>
         <div class="d">Partindo de ${brl.format(res.V)} em ${res.inicio}, com ${res.n} ${res.n>1?"reajustes anuais":"reajuste anual"} — média de ${dec.format(res.g*100)}% ao ano.</div>
       </div>
       <div class="canhoto devido">
-        <div class="t">Pelo teto da ANS seria</div>
+        <div class="t">Mensalidade na simulação</div>
         <div class="v">${brl.format(res.Ph)}</div>
-        <div class="d">A mesma trajetória, aplicando em cada aniversário o teto do ciclo correspondente — média de ${dec.format(res.gAns*100)}% ao ano.</div>
+        <div class="d">Valor estimado para o mesmo período caso a mensalidade tivesse acompanhado os índices da ANS utilizados como referência — média de ${dec.format(res.gAns*100)}% ao ano.</div>
       </div>
     </div>
 
@@ -830,12 +846,14 @@ Gostaria de conversar sobre o meu caso.`);
     </div>
 
     <div class="grafico">
-      <h3>A distância entre o que você paga e o teto da ANS</h3>
-      <p>Cada linha tracejada é um aniversário do contrato. A faixa vermelha é o excesso — repare que ela abre, nunca fecha.</p>
+      <h3>Como essa diferença foi se formando</h3>
+      <p>O gráfico abaixo mostra a evolução da mensalidade informada e da simulação ao longo dos
+      aniversários do contrato. Cada linha tracejada é um aniversário; a faixa vermelha é a
+      diferença acumulada entre as duas curvas.</p>
       ${grafico(res.meses)}
       <div class="legenda">
-        <span><i style="background:var(--excesso)"></i>Sua mensalidade</span>
-        <span><i style="background:var(--devido)"></i>Mensalidade pelo teto da ANS</span>
+        <span><i style="background:var(--excesso)"></i>Mensalidade informada</span>
+        <span><i style="background:var(--devido)"></i>Simulação com os índices da ANS</span>
       </div>
     </div>
 
@@ -843,7 +861,7 @@ Gostaria de conversar sobre o meu caso.`);
       <summary>Ver a comparação ano a ano</summary>
       <div class="memoria-corpo">
         <table class="mem">
-          <thead><tr><th>Aniversário</th><th>Reajuste estimado</th><th>Teto ANS</th><th>Sua mensalidade</th><th>Pelo teto ANS</th><th>Diferença</th></tr></thead>
+          <thead><tr><th>Aniversário</th><th>Reajuste estimado</th><th>Teto ANS</th><th>Informada</th><th>Simulação</th><th>Diferença</th></tr></thead>
           <tbody>${linhasAnos}</tbody>
         </table>
         <p class="nota-mem">
@@ -856,6 +874,12 @@ Gostaria de conversar sobre o meu caso.`);
       </div>
     </details>
 
+    ${res.benefic==="func"?`<div class="nota-perfil">
+      <b>Sobre este contrato.</b> Você indicou um plano empresarial com funcionários como
+      beneficiários. Nesse caso o reajuste é negociado entre a operadora e a empresa, e os índices
+      da ANS para planos individuais servem apenas como referência de comparação — a discussão
+      costuma girar em torno da demonstração da sinistralidade que justificaria o aumento.
+    </div>`:""}
     ${perfilFamiliar?`<div class="nota-perfil">
       <b>Atenção ao perfil deste contrato.</b> Você indicou um plano vinculado a CNPJ que, na
       prática, atende ${res.benefic==="so-eu"?"apenas o titular":"o titular e seus familiares"}${res.vidas?`, com ${res.vidas} ${res.vidas>1?"pessoas":"pessoa"} no contrato`:""}.
