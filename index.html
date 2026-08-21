@@ -128,6 +128,12 @@
     font-size:14px;line-height:1.55;color:#4A4230;border-radius:0 2px 2px 0;
   }
   .ressalva b{color:var(--tinta)}
+  .ressalva p{margin:0 0 12px}
+  .ressalva p:last-child{margin-bottom:0}
+  .ressalva .rotulo{display:block;font-family:var(--mono);font-size:11px;letter-spacing:.16em;
+    text-transform:uppercase;color:var(--realce);margin-bottom:12px}
+  .ressalva .chave{font-family:var(--display);font-size:20px;line-height:1.3;font-weight:600;
+    color:var(--tinta);margin:16px 0}
 
   #resultado{display:none;margin-top:34px}
   #resultado.on{display:block;animation:sobe .45s ease both}
@@ -172,22 +178,6 @@
   .linha-anim{stroke-dasharray:1800;stroke-dashoffset:1800;animation:desenha 1.3s ease .15s forwards}
   @keyframes desenha{to{stroke-dashoffset:0}}
 
-  details.memoria{border:1px solid var(--linha);border-top:0;background:var(--branco)}
-  details.memoria summary{padding:18px 26px;cursor:pointer;font-weight:600;font-size:15px;list-style:none;
-    display:flex;justify-content:space-between;align-items:center;gap:16px}
-  details.memoria summary::-webkit-details-marker{display:none}
-  details.memoria summary::after{content:"+";font-family:var(--mono);font-size:20px;color:var(--tinta-2)}
-  details.memoria[open] summary::after{content:"–"}
-  .memoria-corpo{padding:0 26px 26px;overflow-x:auto}
-  table.mem{width:100%;border-collapse:collapse;font-family:var(--mono);font-size:13.5px;white-space:nowrap}
-  table.mem th{text-align:right;font-weight:500;font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
-    color:var(--tinta-2);padding:8px 14px;border-bottom:1px solid var(--linha)}
-  table.mem th:first-child,table.mem td:first-child{text-align:left}
-  table.mem td{text-align:right;padding:9px 14px;border-bottom:1px solid var(--papel-2)}
-  table.mem tr.presc td{color:#93999D}
-  table.mem .exc{color:var(--excesso);font-weight:500}
-  table.mem .ans{color:var(--devido)}
-  .nota-mem{font-size:12.5px;color:var(--tinta-2);margin:16px 0 0;line-height:1.5}
 
   .nota-perfil{border:1px solid var(--linha);border-top:0;background:#FAF6EC;padding:20px 26px;
     font-size:14.5px;line-height:1.55;color:#4A4230}
@@ -385,12 +375,19 @@
 
   <div class="ressalva">
     <div>
-      <b>Este é um cálculo estimado.</b> Trata-se apenas de uma avaliação preliminar, destinada a
-      identificar possíveis indícios de abusividade com base nos critérios regulatórios da ANS e no
-      entendimento dos tribunais. O resultado não constitui parecer jurídico nem promessa de
-      resultado: a apuração definitiva depende da análise do contrato, dos boletos e do histórico
-      completo de reajustes, inclusive mudanças de faixa etária e alterações no número de
-      beneficiários, que também alteram o valor da mensalidade.
+      <span class="rotulo">Importante</span>
+      <p><b>Esta é uma simulação preliminar.</b> A existência de diferença entre os valores não
+      significa, por si só, que o reajuste seja abusivo, que os índices da ANS devam ser aplicados
+      ao seu contrato ou que exista valor a ser restituído.</p>
+      <p>Tipo de contrato, composição dos beneficiários, mudanças de faixa etária, entradas ou
+      saídas do plano, alterações de cobertura e o histórico efetivo dos reajustes podem modificar
+      a análise.</p>
+      <p class="chave">Os números mostram a diferença. O contrato é que mostra se ela pode ser
+      discutida.</p>
+      <p>Para saber se os reajustes do seu plano merecem uma análise jurídica, é preciso examinar o
+      contrato, os boletos e o histórico de reajustes. É essa análise que permite entender, com
+      segurança, se existe fundamento para questioná-los — inclusive quando a conclusão é de que
+      não há.</p>
     </div>
   </div>
 </section>
@@ -577,7 +574,7 @@
    ======================================================================= */
 const CONFIG = {
   escritorio: "Marchetti & Miranda Advogados Associados",
-  whatsapp: "5511999999999"     // DDI + DDD + número, só dígitos
+  whatsapp: "5511944749744"     // DDI + DDD + número, só dígitos
 };
 
 /* =======================================================================
@@ -769,16 +766,6 @@ function render(res){
     ? `Pelo que você me passou, há indícios de que esteja pagando <b>${brl.format(res.dif)}</b> a mais por mês do que se o reajuste tivesse seguido o teto da ANS.`
     : `A evolução do seu plano ficou perto do teto da ANS. A diferença estimada é de <b>${brl.format(res.dif)}</b> por mês.`;
 
-  const linhasAnos = res.anos.map((a,k)=>`
-    <tr class="${res.anos.length-k>3?"presc":""}">
-      <td>${rotulo(a.i)}</td>
-      <td>${dec.format(res.g*100)}%</td>
-      <td class="ans">${dec.format(a.t*100)}%</td>
-      <td>${dec.format(a.P)}</td>
-      <td>${dec.format(a.Ph)}</td>
-      <td class="exc">${dec.format(a.dif)}</td>
-    </tr>`).join("");
-
   const msg = encodeURIComponent(
 `Olá! Fiz a avaliação preliminar no site.
 
@@ -857,23 +844,6 @@ Gostaria de conversar sobre o meu caso.`);
       </div>
     </div>
 
-    <details class="memoria">
-      <summary>Ver a comparação ano a ano</summary>
-      <div class="memoria-corpo">
-        <table class="mem">
-          <thead><tr><th>Aniversário</th><th>Reajuste estimado</th><th>Teto ANS</th><th>Informada</th><th>Simulação</th><th>Diferença</th></tr></thead>
-          <tbody>${linhasAnos}</tbody>
-        </table>
-        <p class="nota-mem">
-          O percentual anual aparece igual em todos os anos porque, sem o extrato da operadora, o
-          crescimento total é distribuído de forma uniforme entre os ${res.n} aniversários. Na prática
-          os reajustes variam ano a ano — o extrato pormenorizado (RN 509/2022) mostra os números
-          reais e é o que permite o cálculo definitivo.
-          ${res.semFator?"<br>Esta página traz os fatores do TJSP a partir de jan/2019; competências anteriores entram pelo valor nominal, sem correção.":""}
-        </p>
-      </div>
-    </details>
-
     ${res.benefic==="func"?`<div class="nota-perfil">
       <b>Sobre este contrato.</b> Você indicou um plano empresarial com funcionários como
       beneficiários. Nesse caso o reajuste é negociado entre a operadora e a empresa, e os índices
@@ -889,10 +859,10 @@ Gostaria de conversar sobre o meu caso.`);
     </div>`:""}
 
     <div class="cta-res">
-      <p><strong>Quer saber se isso vira processo?</strong>
-      Mande o resultado com seus boletos. Analisamos o contrato e dizemos com franqueza se o caso se
-      sustenta — inclusive quando não se sustenta.</p>
-      <a class="btn btn-zap" href="https://wa.me/${CONFIG.whatsapp}?text=${msg}" target="_blank" rel="noopener">Enviar meu resultado no WhatsApp</a>
+      <p><strong>Quer entender se os reajustes do seu plano podem ser abusivos e se existe algum valor passível de restituição?</strong>
+A simulação mostra uma diferença. Para saber se ela tem relevância jurídica, é preciso analisar o contrato, os boletos e o histórico dos reajustes. 
+Essa análise permite avaliar se há fundamento para discutir os valores aplicados e, quando for o caso, eventual restituição.</p>
+      <a class="btn btn-zap" href="https://wa.me/${CONFIG.whatsapp}?text=${msg}" target="_blank" rel="noopener">SOLICITAR ANÁLISE DO MEU CONTRATO</a>
     </div>`;
   el.classList.add("on");
   el.scrollIntoView({behavior:"smooth",block:"nearest"});
